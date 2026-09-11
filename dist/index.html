@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="适合中小学生的英语单词闯关游戏，支持分级挑战、智能复习和学习报告。" />
+    <title>LexiQuest · 英语单词闯关</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="返回游戏首页">
+          <span class="brand-mark" aria-hidden="true">LQ</span>
+          <span>
+            <strong>LexiQuest</strong>
+            <small>英语单词闯关</small>
+          </span>
+        </a>
+        <div class="lifetime-stats" aria-label="累计学习数据">
+          <span>连续答对 <strong id="top-streak">0</strong></span>
+          <span>累计掌握 <strong id="top-mastered">0</strong></span>
+        </div>
+      </header>
+
+      <section id="setup-screen" class="screen active" aria-labelledby="setup-title">
+        <div class="setup-copy">
+          <p class="eyebrow">LEVEL UP YOUR WORDS</p>
+          <h1 id="setup-title">今天想挑战哪一级？</h1>
+          <p>每局 10 题。答错的单词会进入复习清单，闯关结束后可以集中重练。</p>
+        </div>
+
+        <div class="level-grid" role="radiogroup" aria-label="选择词汇难度">
+          <button class="level-card selected" data-level="primary" role="radio" aria-checked="true">
+            <span class="level-index">01</span>
+            <span class="level-icon" aria-hidden="true">ABC</span>
+            <strong>小学词汇</strong>
+            <small>日常事物与基础动词</small>
+          </button>
+          <button class="level-card" data-level="junior" role="radio" aria-checked="false">
+            <span class="level-index">02</span>
+            <span class="level-icon" aria-hidden="true">GO!</span>
+            <strong>初中词汇</strong>
+            <small>校园生活与常用表达</small>
+          </button>
+          <button class="level-card" data-level="senior" role="radio" aria-checked="false">
+            <span class="level-index">03</span>
+            <span class="level-icon" aria-hidden="true">UP</span>
+            <strong>高中词汇</strong>
+            <small>抽象概念与核心高频词</small>
+          </button>
+        </div>
+
+        <div class="setup-controls">
+          <label>
+            <span>出题方式</span>
+            <select id="mode-select">
+              <option value="mixed">中英混合</option>
+              <option value="en-zh">看英文选中文</option>
+              <option value="zh-en">看中文选英文</option>
+            </select>
+          </label>
+          <button id="start-button" class="primary-button">开始闯关 <span aria-hidden="true">→</span></button>
+        </div>
+
+        <div class="last-result" id="last-result" hidden>
+          <span>上次成绩</span>
+          <strong id="last-score">0</strong>
+          <small id="last-accuracy">正确率 0%</small>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen" aria-labelledby="question-word">
+        <div class="game-status">
+          <button id="quit-button" class="text-button">← 退出</button>
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span id="question-count">第 1 / 10 题</span>
+              <strong id="level-label">小学词汇</strong>
+            </div>
+            <div class="progress-track"><span id="progress-bar"></span></div>
+          </div>
+          <div class="score-pill"><span>得分</span><strong id="score">0</strong></div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="question-meta">
+            <span id="direction-label">选择正确的中文释义</span>
+            <span id="streak-badge" class="streak-badge">连对 0</span>
+          </div>
+          <div class="word-row">
+            <div>
+              <h2 id="question-word">apple</h2>
+              <p id="phonetic">/ˈæp.əl/</p>
+            </div>
+            <button id="speak-button" class="sound-button" aria-label="朗读单词" title="朗读单词">▶</button>
+          </div>
+
+          <div id="options" class="options-grid" aria-label="答案选项"></div>
+
+          <div class="challenge-footer">
+            <button id="hint-button" class="secondary-button">给我提示 <small>−5分</small></button>
+            <p id="feedback" class="feedback" aria-live="polite"></p>
+            <button id="next-button" class="primary-button compact" hidden>下一题 →</button>
+          </div>
+        </div>
+
+        <p class="keyboard-tip">按数字键 1–4 快速作答，按 Enter 进入下一题</p>
+      </section>
+
+      <section id="result-screen" class="screen" aria-labelledby="result-title">
+        <div class="result-heading">
+          <p class="eyebrow">MISSION COMPLETE</p>
+          <h1 id="result-title">闯关完成！</h1>
+          <p id="result-message">你的单词能量又增加了。</p>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-score-card">
+            <span>本局得分</span>
+            <strong id="final-score">0</strong>
+            <div class="grade-ring" id="grade-ring"><span id="grade-letter">A</span></div>
+          </div>
+          <div class="metrics">
+            <div><span>正确率</span><strong id="final-accuracy">0%</strong></div>
+            <div><span>答对</span><strong id="correct-count">0 / 10</strong></div>
+            <div><span>最佳连对</span><strong id="best-streak">0</strong></div>
+          </div>
+        </div>
+
+        <div class="review-panel">
+          <div>
+            <span class="panel-label">智能复习清单</span>
+            <h2 id="review-title">本局全部掌握</h2>
+          </div>
+          <div id="wrong-list" class="wrong-list"></div>
+        </div>
+
+        <div class="result-actions">
+          <button id="restart-button" class="primary-button">再来一局</button>
+          <button id="review-button" class="secondary-button">重练错词</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
